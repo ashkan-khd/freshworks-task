@@ -1,13 +1,13 @@
 import logging
 from django.conf import settings
 
-from q1_smtp.refactored.message_builder import MessageDirector, FileInfo
-from q1_smtp.refactored.message_sender import (
+from q1_smtp.smtp.message_builder import MessageDirector, FileInfo
+from q1_smtp.smtp.message_sender import (
     EmailMessageSender,
     EmailJobQueueInterface,
     EmailResult,
 )
-from q1_smtp.refactored.message_sender.sender import EmailMessageSenderFactory
+from q1_smtp.smtp.message_sender.sender import EmailMessageSenderFactory
 
 from .config_context import ConfigContextInterface
 
@@ -25,7 +25,7 @@ class SMTPFacade:
     def __create_job_queue(
         self, sender: EmailMessageSender, message_director: MessageDirector, receiver
     ) -> EmailJobQueueInterface:
-        from q1_smtp.refactored.message_sender.email_queue import EmailJobQueue
+        from q1_smtp.smtp.message_sender.email_queue import EmailJobQueue
 
         queue = EmailJobQueue(sender)
         for rec in receiver:
@@ -33,7 +33,7 @@ class SMTPFacade:
         return queue
     
     def __create_sender_factory(self) -> "EmailMessageSenderFactory":
-        from q1_smtp.refactored.message_sender.sender.src import MIMEMultipartMessageSenderFactory
+        from q1_smtp.smtp.message_sender.sender.src import MIMEMultipartMessageSenderFactory
         return MIMEMultipartMessageSenderFactory(
             **self.config_context.get_sender_fields()
         )
