@@ -13,17 +13,17 @@ class MessageDirector:
         self,
         sender: str,
         reply_to: str,
-        provider: Providers,
+        provider: Optional[Providers],
         subject,
         body,
-        file_info: Optional[FileInfo],
+        file_info: FileInfo,
     ):
         self.sender = sender
         self.reply_to = reply_to
         self.provider = provider
         self.subject = subject
         self.body = body
-        self.pdf = file_info
+        self.file_info = file_info
 
     def set_builder(self, builder: MessageBuilderInterface):
         self.builder = builder
@@ -37,6 +37,6 @@ class MessageDirector:
         self.builder.attach_subject(self.subject)
         self.builder.attach_provider(self.provider)
         self.builder.attach_body(self.body)
-        if self.pdf:
-            self.builder.attach_pdf(self.pdf)
+        if self.file_info:
+            self.builder.attach_pdf(self.file_info)
         return self.builder.build()
