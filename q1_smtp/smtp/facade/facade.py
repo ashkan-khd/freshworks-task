@@ -22,6 +22,22 @@ class SMTPFacade:
 
         return ConfigContext(config)
 
+    def __create_message_director(self, subject, html_msg, filename, filepath):
+        from q1_smtp.smtp.message_builder.builder import MIMEMultipartMessageBuilder
+
+        director = MessageDirector(
+            sender=self.from_email,
+            reply_to=self.reply_email,
+            subject=subject,
+            body=html_msg,
+            file_info=FileInfo(filename, filepath),
+            **self.config_context.get_message_fields(),
+        )
+
+        builder = MIMEMultipartMessageBuilder()
+        director.set_builder(builder)
+        return director
+
     def __create_job_queue(
         self, sender: EmailMessageSender, message_director: MessageDirector, receiver
     ) -> EmailJobQueueInterface:
@@ -61,13 +77,8 @@ class SMTPFacade:
         q=True,
         log_each_email: bool = False,
     ):
-        message_director = MessageDirector(
-            sender=self.from_email,
-            reply_to=self.reply_email,
-            subject=subject,
-            body=html_msg,
-            file_info=FileInfo(filename, filepath),
-            **self.config_context.get_message_fields(),
+        message_director = self.__create_message_director(
+            subject, html_msg, filename, filepath
         )
 
         sender_factory = self.__create_sender_factory()

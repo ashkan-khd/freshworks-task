@@ -16,6 +16,7 @@ class EmailResult:
 
 
 class EmailJobQueueInterface(ABC):
+    sender: EmailMessageSender
 
     @abstractmethod
     def __iter__(self) -> "EmailQueueProcessorInterface":
