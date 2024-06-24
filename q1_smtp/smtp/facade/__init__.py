@@ -1,1 +1,1 @@
-from .facade import SMTPFacade
+from .facade import SMTPFacade, SmtpService

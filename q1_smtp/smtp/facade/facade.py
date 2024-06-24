@@ -31,9 +31,12 @@ class SMTPFacade:
         for rec in receiver:
             queue.enqueue(EmailResult(message_director.construct(rec)))
         return queue
-    
+
     def __create_sender_factory(self) -> "EmailMessageSenderFactory":
-        from q1_smtp.smtp.message_sender.sender.src import MIMEMultipartMessageSenderFactory
+        from q1_smtp.smtp.message_sender.sender.src import (
+            MIMEMultipartMessageSenderFactory,
+        )
+
         return MIMEMultipartMessageSenderFactory(
             **self.config_context.get_sender_fields()
         )
@@ -81,3 +84,6 @@ class SMTPFacade:
                     if not email.successful:
                         logs.append(f"Err: {str(email.err)}")
                     logger.debug("\n".join(logs))
+
+
+SmtpService = SMTPFacade
